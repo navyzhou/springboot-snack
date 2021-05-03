@@ -11,6 +11,8 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
       username: root
       password: Navy123321,.
+      dbName: snacknet
+      backupPath: D:/databack
    http: # 编码集
       encoding:
          charset: utf-8

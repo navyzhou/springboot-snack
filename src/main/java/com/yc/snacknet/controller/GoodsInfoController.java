@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,9 @@ import com.yc.snacknet.vo.ResultVO;
 public class GoodsInfoController {
 	@Autowired
 	private IGoodsInfoService goodsInfoService;
+	
+	@Value("${web.upload-path}")
+	private String basePath;
 
 	@RequestMapping("/findByGno")
 	public ResultVO findByGno(String gno){
@@ -61,15 +65,13 @@ public class GoodsInfoController {
 	 */
 	@RequestMapping("/upload")
 	public Map<String, Object> upload(MultipartFile upload, HttpServletRequest request) {
-		String basePath = request.getServletContext().getRealPath(""); // 获取项目在服务器中的真实路径
-		
 		String savePath = "";
 		File dest = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (upload != null && upload.getSize() > 0) { // 说明确实有文件上传
 			try {
 				savePath = SessionKeys.uploadPath + "/" + new Date().getTime() + "_" + upload.getOriginalFilename();
-				dest = new File(new File(basePath).getParentFile(), savePath); // 将上传的文件写到指定的文件
+				dest = new File(new File(basePath), savePath); // 将上传的文件写到指定的文件
 				upload.transferTo(dest); // 将数据写到文件
 				
 				// 以下必须这样写
@@ -107,8 +109,6 @@ public class GoodsInfoController {
 	 * @return
 	 */
 	private GoodsInfo getInfo(GoodsInfo gf, MultipartFile[] goods_pics, HttpServletRequest request) {
-		String basePath = request.getServletContext().getRealPath(""); // 获取项目在服务器中的真实路径
-
 		String savePath = "";
 		File dest = null;
 		
@@ -117,7 +117,7 @@ public class GoodsInfoController {
 			try {
 				for (MultipartFile pic : goods_pics) {
 					savePath = SessionKeys.uploadPath + "/" + new Date().getTime() + "_" + pic.getOriginalFilename();
-					dest = new File(new File(basePath).getParentFile(), savePath);
+					dest = new File(new File(basePath), savePath);
 					pic.transferTo(dest);
 					if ("".equals(picStr)) {
 						picStr += "../" + savePath;
@@ -138,7 +138,6 @@ public class GoodsInfoController {
 
 	@RequestMapping("/add")
 	public ResultVO add(GoodsInfo gf, MultipartFile[] goods_pics, HttpServletRequest request)  {
-		
 		int result = goodsInfoService.add(getInfo(gf, goods_pics, request));
 		if (result > 0) {
 			return new ResultVO(200, "成功");
