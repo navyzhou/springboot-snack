@@ -1,0 +1,44 @@
+# 配置服务器启动的端口
+server:
+   port: 8888
+
+spring:
+   application:
+      name: springboot-snack
+   datasource: # 配置数据源
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/snacknet?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useOldAliasMetadataBehavior=true
+      type: com.alibaba.druid.pool.DruidDataSource
+      username: root
+      password: Navy123321,.
+   http: # 编码集
+      encoding:
+         charset: utf-8
+         force: true
+         enabled: true
+   mail: # 邮件发送
+      protocol: smtp
+      username: 1293580602@qq.com
+      password: dihpepdwtahlgefh
+      port: 465
+      host: smtp.qq.com
+      properties:
+         mail:
+            smtp:
+               auth: true
+               timeout: 2500
+               ssl:
+                  enable: true
+                  
+   # 配置静态资源的路径
+   resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/static/,classpath:/public/,classpath:/resources/,file:${web.upload-path}
+
+# 配置文件上传的路径
+web:
+   upload-path: D:/
+             
+# 配置mybatis
+mybatis:
+   mapper-locations: classpath:mapper/*Mapper.xml
+   type-aliases-package: com.yc.snacknet.bean
