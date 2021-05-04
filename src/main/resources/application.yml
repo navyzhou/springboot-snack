@@ -45,6 +45,7 @@ spring:
       jedis:
          pool:
             max-active: 8
+            max-wait: 8000
       
 
 # 配置文件上传的路径
