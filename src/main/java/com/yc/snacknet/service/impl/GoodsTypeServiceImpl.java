@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yc.snacknet.bean.GoodsType;
 import com.yc.snacknet.mapper.IGoodsTypeMapper;
+import com.yc.snacknet.redis.IRedisDao;
 import com.yc.snacknet.service.IGoodsTypeService;
 import com.yc.snacknet.util.StringUtil;
 
@@ -20,6 +21,9 @@ import com.yc.snacknet.util.StringUtil;
 public class GoodsTypeServiceImpl implements IGoodsTypeService{
 	@Autowired
 	private IGoodsTypeMapper mapper;
+	
+	@Autowired
+	private IRedisDao redisDao;
 
 	@Override
 	public int add(GoodsType type) {
@@ -42,8 +46,15 @@ public class GoodsTypeServiceImpl implements IGoodsTypeService{
 		return mapper.findAll();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<GoodsType> finds() {
-		return mapper.finds();
+		Object obj = redisDao.get("types");
+		if (obj == null) {
+			List<GoodsType> types = mapper.finds();
+			redisDao.set("types", types);
+			return types;
+		}
+		return (List<GoodsType>) obj;
 	}
 }

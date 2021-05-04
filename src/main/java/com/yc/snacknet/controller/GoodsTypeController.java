@@ -17,7 +17,7 @@ import com.yc.snacknet.vo.ResultVO;
 public class GoodsTypeController {
 	@Autowired
 	private IGoodsTypeService typeService;
-
+	
 	@RequestMapping("/finds")
 	public ResultVO finds(){
 		List<GoodsType> list = typeService.finds();
